@@ -4,8 +4,8 @@ $(document).ready(() => {
         if (action && action === "autofillForUser" && user) {
             fetch('http://localhost:1050/inquireUser', {
                 method: "POST",
-                body: { user },
-                json: true
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ user })
             }).then(response => {
                 response.json().then(({ first_name, last_name, email, phone }) => {
                     $("#first_name").val(first_name);
