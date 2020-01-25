@@ -6,6 +6,8 @@ import "./add_job_page.scss"
 
 interface AddJobPageProps {
     close : () => void;
+    addJob : (newJob: Job) => void;
+
 }
 
 const Status = {
@@ -14,6 +16,7 @@ const Status = {
     REJECTED : 2
 };
 
+@observer
 export default class AddJobPage extends React.Component<AddJobPageProps> {
     @observable public companyInput?: HTMLInputElement;
     @observable public jobTitleInput?: HTMLInputElement;
@@ -24,6 +27,12 @@ export default class AddJobPage extends React.Component<AddJobPageProps> {
     @observable public recruiterEmailInput?: HTMLInputElement;
     @observable public applicationWayInput?: HTMLInputElement;
     // @observable public referralOptionsInput?: Contact[];
+
+    @action
+    createAndAddJob = () => {
+        let newJob = new Job(this.companyInput?.value!, this.jobTitleInput?.value!, this.appDateInput?.value!, this.statusInput?.name!, this.datePostedInput?.value!, this.recruiterNameInput?.value!, this.recruiterEmailInput?.value!, this.applicationWayInput?.value!, []);
+        this.props.addJob(newJob);
+    }
 
 
     render() {
@@ -98,6 +107,7 @@ export default class AddJobPage extends React.Component<AddJobPageProps> {
                         <br/>
                         <button className="buttons" onClick={() => {
                         //    Put message to server here!!!
+                            this.createAndAddJob();
                             this.props.close();
                         }}>
                             Register
