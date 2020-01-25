@@ -9,7 +9,6 @@ import AddJobPage from "./add_job_page";
 
 export interface HomeViewProps {
     background: string;
-    jobs : Job[];
 }
 
 @observer
@@ -17,15 +16,23 @@ export default class HomeView extends React.Component<HomeViewProps> {
     @observable private counter = 0;
     @observable private filterBox?: HTMLInputElement;
     @observable private openCreation : boolean = false;
+    @observable private jobs: Job[] = [];
 
+    @action
+    addJob = (newJob: Job) => {
+        this.jobs.push(newJob);
+        console.log("Added: " + newJob);
+        console.log("Title" + newJob.jobTitle);
+    }
 
+    @action
     close = () => {
         this.openCreation = false;
     }
 
     renderAddition = () => {
         if(this.openCreation){
-            return <AddJobPage close={this.close}/>
+            return <AddJobPage close={this.close} addJob= {this.addJob}/>
         } 
         return (null)
     }
@@ -37,6 +44,7 @@ export default class HomeView extends React.Component<HomeViewProps> {
                 className="container"
                 style={{ background }}
             >
+                <div style={{display: "flex", flexDirection: "row", justifyContent: "center"}}>
                 <input 
                         type="text"
                         id="search_bar"
@@ -46,6 +54,7 @@ export default class HomeView extends React.Component<HomeViewProps> {
                             this.filterBox.focus();
                         }}}
                 />
+                </div>
                  <a className="registration" id="register" onClick={() => {
                         this.openCreation = true;
                     }}>
@@ -53,7 +62,7 @@ export default class HomeView extends React.Component<HomeViewProps> {
                 </a>
                 {this.renderAddition()}
 
-                {this.props.jobs.map(job => (<ApplicationRec listedJob={job}></ApplicationRec>))}
+                {this.jobs.map(job => (<ApplicationRec listedJob={job} ></ApplicationRec>))}
         
             </div>
         );
