@@ -2,7 +2,7 @@ import React from 'react';
 import './App.css';
 import { messageActiveTab } from './messaging';
 import { getToken, logout } from './authorization';
-import { observable, action, runInAction } from 'mobx';
+import { observable, runInAction } from 'mobx';
 import { observer } from 'mobx-react';
 import logo from "./logo.svg";
 
@@ -27,7 +27,13 @@ export default class App extends React.Component<{}> {
         }
     }
 
-    private onClick = async () => alert(await messageActiveTab({ action: "apply" }));
+    private onClick = async () => {
+        const success = await messageActiveTab({ action: "searchForEmbeddedBoards" });
+        console.log(success ? 'Successfully opened job board.' : 'No embedded greenhouse.io content was found.')
+        setTimeout(() => {
+            messageActiveTab({ action: "inquireUser", email: "samwilkins333@gmail.com" });
+        }, 3000);
+    };
 
     render() {
         const token = this.token;

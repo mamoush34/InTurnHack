@@ -1,0 +1,28 @@
+{
+    "manifest_version": 2,
+    "short_name": "InTurn",
+    "name": "InTurn Chrome Extension",
+    "version": "1.0.0",
+    "permissions": ["tabs", "activeTab", "storage", "identity"],
+    "browser_action": {
+        "default_popup": "index.html",
+        "default_title": "InTurn Chrome Extension"
+    },
+    "oauth2": {
+        "client_id": "64901127222-aqoomftj49pgtq0p7pnb9edqcpsvt4kj.apps.googleusercontent.com",
+        "scopes": ["https://www.googleapis.com/auth/gmail.readonly"]
+    },
+    "content_scripts": [
+        {
+          "js": ["./static/js/jquery.js", "./static/js/greenhouse_finder.js"],
+          "matches": ["<all_urls>"]
+        },
+        {
+          "js": ["./static/js/jquery.js", "./static/js/greenhouse_filler.js"],
+          "matches": ["*://boards.greenhouse.io/embed/*"]
+        }
+    ],
+    "web_accessible_resources": ["assets/*"],   
+    "content_security_policy": "script-src 'self' 'unsafe-eval' 'sha256-SlLdk5CdyE4Pt3VzeETYGwztJ8rwnyU9Wk7s9RE/xlE='; object-src 'self'",
+    "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAkNePjUbEo9YZCZZvZZW/mytXvShqyqcEFpfFS0jJKFWa9CpnQo5dh6JHhKk/vEBum43ynPjRcOWgcQX/xULS5ybYM+BqMeanWNslW9RDRFNjz/wXfhwKPL0of6G2osTV/uNT8uaTkI3RUfotdAsar87dZE0WJg6GaxGFwxYfhroesH9S5RbqkBfZqTmGK88EbRLrR4uQVYFzaQ83k4qgNjDDDlv7MR7F5VaOGc7U3POUPirnXdeP2f5iGk+p0vzzRJdDlBVRZavqAafY4dGhLtanV1OyM4qc8WOdii4sdk7CDPhaOrSo8LvhkNvm3YT7hjzkyuKNiupeZtgxlQ//AQIDAQAB"
+}
