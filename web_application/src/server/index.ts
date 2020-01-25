@@ -15,11 +15,11 @@ const content_path = resolve(__dirname, "../../src/index.html");
 
 const server = express();
 
-server.use(cors());
+server.use(express.static(static_path));
+
 server.use(bodyParser.json({ limit: "10mb" }));
 server.use(bodyParser.urlencoded({ extended: true }));
-
-server.use(express.static(static_path));
+// server.use(cors());
 
 server.get("/", (_req, res) => res.redirect("/logo"));
 server.get("/logo", (_req, res) => {
@@ -27,8 +27,10 @@ server.get("/logo", (_req, res) => {
 });
 
 server.post("/inquireUser", async (req, res) => { 
-    const { body: { email } } = req;
-    (await Database.getOrCreateCollection(database.userCollection)).findOne({ email }, (error, result) => {
+    const { body: { user } } = req;
+    console.log(req.body);
+    (await Database.getOrCreateCollection(database.userCollection)).findOne({ email: user }, (error, result) => {
+        console.log(result);
         res.send(error ? undefined : result);
     });
 });

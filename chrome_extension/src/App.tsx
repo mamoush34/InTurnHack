@@ -27,12 +27,11 @@ export default class App extends React.Component<{}> {
         }
     }
 
-    private onClick = async () => {
-        const success = await messageActiveTab({ action: "searchForEmbeddedBoards" });
-        console.log(success ? 'Successfully opened job board.' : 'No embedded greenhouse.io content was found.')
-        setTimeout(() => {
-            messageActiveTab({ action: "inquireUser", email: "samwilkins333@gmail.com" });
-        }, 3000);
+    private searchForEmbeddedBoards = async () => {
+        messageActiveTab({
+            action: "searchForEmbeddedBoards",
+            user: "samuel_wilkins@brown.edu"
+        });
     };
 
     render() {
@@ -47,7 +46,7 @@ export default class App extends React.Component<{}> {
                 <header className="App-header">
                     <p
                         className={"greenhouse-prompt"}
-                        onClick={this.onClick}
+                        onClick={this.searchForEmbeddedBoards}
                     >
                         Check page for embedded greenhouse.io application boards.
                     </p>
