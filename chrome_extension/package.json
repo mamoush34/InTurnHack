@@ -1,0 +1,45 @@
+{
+  "name": "inturn_chome_extension",
+  "version": "0.1.0",
+  "dependencies": {
+    "@types/jest": "24.0.23",
+    "@types/jquery": "^3.3.31",
+    "@types/node": "12.12.8",
+    "@types/react": "16.9.11",
+    "@types/react-dom": "16.9.4",
+    "@types/request-promise": "^4.1.45",
+    "mobx": "^5.15.0",
+    "mobx-react": "^6.1.4",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
+    "react-scripts": "3.2.0",
+    "request-promise": "^4.2.5",
+    "typescript": "3.7.2"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "make": "npm run build && cpy ./src/js/* ./build/static/js"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@types/chrome": "0.0.91",
+    "cpy-cli": "^2.0.0"
+  }
+}
