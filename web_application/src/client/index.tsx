@@ -1,5 +1,5 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import MainView from "./main_view";
+import HomeView from "./home_view";
 
-ReactDOM.render(<MainView background={"#000033"} />, document.getElementById("root"));
+ReactDOM.render(<HomeView background={"#000033"} />, document.getElementById("root"));
