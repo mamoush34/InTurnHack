@@ -30,8 +30,21 @@ export default class AddJobPage extends React.Component<AddJobPageProps> {
 
     @action
     createAndAddJob = () => {
-        let newJob = new Job(this.companyInput?.value!, this.jobTitleInput?.value!, this.appDateInput?.value!, this.statusInput?.name!, this.datePostedInput?.value!, this.recruiterNameInput?.value!, this.recruiterEmailInput?.value!, this.applicationWayInput?.value!, []);
+        let newJob = new Job(this.companyInput?.value!, this.jobTitleInput?.value!, this.appDateInput?.value!, this.decipherStatus(this.statusInput?.value!), this.datePostedInput?.value!, this.recruiterNameInput?.value!, this.recruiterEmailInput?.value!, this.applicationWayInput?.value!, []);
         this.props.addJob(newJob);
+    }
+
+    decipherStatus = (statusVal : string) => {
+        switch(Number(statusVal)) {
+            case Status.PENDING:
+                return "Pending";
+            case Status.ACCEPTED:
+                return "Accepted";
+            case Status.REJECTED:
+                return "Rejected";
+            default:
+                return "";       
+        }
     }
 
 

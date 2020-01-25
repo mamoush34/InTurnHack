@@ -44,6 +44,7 @@ export default class HomeView extends React.Component<HomeViewProps> {
                 className="container"
                 style={{ background }}
             >
+                <div style={{display: "flex", flexDirection: "row", justifyContent: "center"}}>
                 <input 
                         type="text"
                         id="search_bar"
@@ -53,6 +54,7 @@ export default class HomeView extends React.Component<HomeViewProps> {
                             this.filterBox.focus();
                         }}}
                 />
+                </div>
                  <a className="registration" id="register" onClick={() => {
                         this.openCreation = true;
                     }}>
