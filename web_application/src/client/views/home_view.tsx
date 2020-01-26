@@ -10,12 +10,11 @@ import { Server } from "../utilities/utilities";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faIdBadge } from '@fortawesome/free-solid-svg-icons';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import DynamicJobMap from "../utilities/dynamic_job_map";
 import { MapUtils } from "../utilities/map_types";
 import { Comparators, Ordering, Compare } from "../utilities/comparators";
+import DynamicOrderedMap from "../utilities/dynamic_map";
 
 library.add(faIdBadge);
-
 
 export interface HomeViewProps {
     background: string;
@@ -25,7 +24,8 @@ export interface HomeViewProps {
 export default class HomeView extends React.Component<HomeViewProps> {
     @observable private filterBox?: HTMLInputElement;
     @observable private openCreation: boolean = false;
-    @observable private jobsMap?: DynamicJobMap;
+    @observable private jobsMap?: DynamicOrderedMap<string, Job>;
+    private descending = true;
 
     componentDidMount() {
         Server.Post("/jobs").then(action(response => {
@@ -48,7 +48,7 @@ export default class HomeView extends React.Component<HomeViewProps> {
                     initial.set(_id, job);
                 });
             }
-            this.jobsMap = new DynamicJobMap(initial);
+            this.jobsMap = new DynamicOrderedMap(initial, Ordering.STATUS);
         }));
     }
 
@@ -65,7 +65,38 @@ export default class HomeView extends React.Component<HomeViewProps> {
         this.openCreation = false;
     }
 
-    private descending = true;
+    @computed
+    private get sortingPanel() {
+        return <div
+            className={"job-rect"}
+            style={{ marginBottom: 40 }}
+            onClick={() => {
+                const { jobsMap } = this;
+                if (!jobsMap) {
+                    return;
+                }
+                let ordering = jobsMap.currentOrdering;
+                if (this.descending) {
+                    this.descending = false;
+                } else {
+                    this.descending = true;
+                    ordering = this.jobsMap?.currentOrdering === Ordering.STATUS ? Ordering.COMPANY : Ordering.STATUS;
+                }
+                if (ordering !== "unsorted") {
+                    jobsMap.invalidateOrdering(ordering);
+                }
+                let comparator: Compare.Map.ByValue<Job>;
+                if (ordering === "unsorted") {
+                    comparator = Comparators.unsorted;
+                } else {
+                    comparator = Comparators.sorted(ordering, this.descending);
+                }
+                jobsMap.sortBy(comparator, ordering);
+            }}
+        >
+            <div>SORTED BY {this.jobsMap?.currentOrdering}</div>
+        </div>
+    }
 
     @computed
     private get renderPage() {
@@ -87,6 +118,7 @@ export default class HomeView extends React.Component<HomeViewProps> {
                         type="text"
                         id="search_bar"
                         placeholder="Search here!"
+                        onChange={e => this.jobsMap?.filterBy(e.target.value)}
                         ref={(el) => {
                             if (el) {
                                 this.filterBox = el;
@@ -100,35 +132,7 @@ export default class HomeView extends React.Component<HomeViewProps> {
                         <FontAwesomeIcon icon={faIdBadge} size={"3x"} ></FontAwesomeIcon>
                     </a>
                 </div>
-                <div
-                    className={"job-rect"}
-                    style={{ marginBottom: 40 }}
-                    onClick={() => {
-                        const { jobsMap } = this;
-                        if (!jobsMap) {
-                            return;
-                        }
-                        let ordering = jobsMap.currentOrdering;
-                        if (this.descending) {
-                            this.descending = false;
-                        } else {
-                            this.descending = true;
-                            ordering = this.jobsMap?.currentOrdering === Ordering.STATUS ? Ordering.COMPANY : Ordering.STATUS;
-                        }
-                        if (ordering !== "unsorted") {
-                            jobsMap.invalidateOrdering(ordering);
-                        }
-                        let comparator: Compare.Map.ByValue<Job>;
-                        if (ordering === "unsorted") {
-                            comparator = Comparators.unsorted;
-                        } else {
-                            comparator = Comparators.sorted(ordering, this.descending);
-                        }
-                        jobsMap.sortBy(comparator, ordering);
-                    }}
-                >
-                    <div>SORTED BY {this.jobsMap?.currentOrdering}</div>
-                </div>
+                {this.sortingPanel}
                 {renderedJobs}
             </div>
         }

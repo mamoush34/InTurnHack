@@ -1,25 +1,36 @@
 import { action, observable, computed } from "mobx";
-import { PredicateFilter, IterateHandler, Opt, MapUtils } from "./map_types";
+import { IterateHandler, Opt, MapUtils, PredicateFilter } from "./map_types";
 import { Compare } from "./comparators";
 import { AssertionError } from "assert";
 
-export default class DynamicOrderedMap<K, V> {
+export type Orderable<V> = keyof V | "unsorted";
+
+export interface Matchable {
+    matches: (filter: string, isCaseSensitive: boolean) => boolean;
+}
+
+
+export default class DynamicOrderedMap<K, V extends Matchable> {
     @observable private initial_state: Map<K, V>;
     @observable private current_state: Map<K, V>;
+    private predicateFilter: PredicateFilter<K, V, string> = (e, query) => {
+        if (!this.isCaseSensitive) {
+            query = query.toLowerCase();
+        }
+        return e.value.matches(query, this.isCaseSensitive);
+    }
 
-    private _predicate: PredicateFilter<K, V, string>;
-    private _orderingHandler: Opt<IterateHandler<K, V, keyof V>>;
-    @observable protected isCaseSensitive: boolean = false;
+    private _orderingHandler: Opt<IterateHandler<K, V, Orderable<V>>>;
+    @observable private isCaseSensitive: boolean = false;
 
-    @observable private _orderingCache: Map<keyof V, K[]>;
-    @observable private _currentOrdering: keyof V;
+    @observable private _orderingCache: Map<Orderable<V>, K[]>;
+    @observable private _currentOrdering: Orderable<V>;
     @observable private _currentFilter: string;
     @observable private _currentComparator?: Compare.Map.ByValue<V>;
 
-    constructor(init: Map<K, V>, d: keyof V, p: PredicateFilter<K, V, string>, h?: IterateHandler<K, V, keyof V>) {
+    constructor(init: Map<K, V>, d: Orderable<V>, h?: IterateHandler<K, V, Orderable<V>>) {
         this.initial_state = MapUtils.deepCopy(init);
         this.current_state = MapUtils.deepCopy(init);
-        this._predicate = p;
 
         this._orderingCache = new Map<keyof V, K[]>();
         this._orderingHandler = h;
@@ -52,7 +63,7 @@ export default class DynamicOrderedMap<K, V> {
     }
 
     @action
-    sortBy = (comparator: Compare.Map.ByValue<V>, ordering: keyof V, updateGui: boolean = true) => {
+    sortBy = (comparator: Compare.Map.ByValue<V>, ordering: Orderable<V>, updateGui: boolean = true) => {
         let source: Opt<Map<K, V>> = null;
         this._currentComparator = comparator;
 
@@ -89,7 +100,10 @@ export default class DynamicOrderedMap<K, V> {
         // if no filter phrase, no need to remove entries
         if (this._currentFilter.length === 0) return;
         // set this.activities to a deep copy of itself containing only matching entries
-        this.current_state = MapUtils.deepCopy(this.current_state, { predicate: this._predicate, info: this._currentFilter });
+        this.current_state = MapUtils.deepCopy(this.current_state, {
+            predicate: this.predicateFilter,
+            info: this._currentFilter
+        });
     }
 
     @action
@@ -98,14 +112,14 @@ export default class DynamicOrderedMap<K, V> {
     // maintains an insertion-ordered list of activity ids,
     // capturing a lightweight snapshot of the map ordering
     @action
-    cache = (src: Map<K, V>, ordering: keyof V) => {
+    cache = (src: Map<K, V>, ordering: Orderable<V>) => {
         let record: K[] = [];
         MapUtils.iterate(src, (e) => record.push(e.key));
         this._orderingCache.set(ordering, record);
     }
 
     @action
-    apply = (ordering: keyof V) => {
+    apply = (ordering: Orderable<V>) => {
         this._currentOrdering = ordering
         let cached = this._orderingCache.get(ordering);
         if (!cached) return false;

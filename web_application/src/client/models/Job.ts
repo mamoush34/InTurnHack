@@ -1,4 +1,5 @@
 import { observable } from "mobx";
+import { Matchable } from "../utilities/dynamic_map";
 
 interface Contact {
     name: string,
@@ -6,7 +7,21 @@ interface Contact {
     email: string
 }
 
-export class Job {
+export class Job implements Matchable {
+
+    matches = (filter: string, isCaseSensitive: boolean) => {
+        let fields = [
+            this.jobTitle,
+            this.company,
+            this.appDate,
+            this.status
+        ];
+        if (!isCaseSensitive) {
+            fields = fields.map(field => field.toLowerCase());
+        }
+        return fields.some(field => field.includes(filter));
+    };
+
     private _id?: string;
     public get id() {
         return this._id || "__pending__";
