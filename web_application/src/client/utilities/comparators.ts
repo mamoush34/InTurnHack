@@ -7,15 +7,15 @@ export namespace Compare {
     }
 }
 
-export default class Comparators {
-    static unsorted = () => 0;
-    static sorted = (key: keyof Job) => (a: [number, Job], b: [number, Job]) => b[1][key] > a[1][key] ? 1 : -1;
+export namespace Comparators {
+    export const unsorted = () => 0;
+    export const sorted = <T>(key: keyof T, descending = true) => (a: [string, T], b: [string, T]) => (b[1][key] > a[1][key] ? -1 : 1) * (descending ? 1 : -1);
 }
 
 export enum Ordering {
-    UNSORTED = "Unsorted",
-    POSITION = "Position Title",
-    COMPANY = "Company",
-    DATE = "Date",
-    STATUS = "Status"
+    UNSORTED = "unsorted",
+    POSITION = "jobTitle",
+    COMPANY = "company",
+    DATE = "appDate",
+    STATUS = "status"
 }

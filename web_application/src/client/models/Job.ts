@@ -7,7 +7,15 @@ interface Contact {
 }
 
 export class Job {
-    
+    private _id?: string;
+    public get id() {
+        return this._id || "__pending__";
+    }
+    public set id(value: string) {
+        if (value && value.length) {
+            this._id = value;
+        }
+    }
     @observable public company: string;
     @observable public jobTitle: string;
     @observable public appDate: string;

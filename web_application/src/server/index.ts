@@ -23,9 +23,7 @@ server.use(bodyParser.urlencoded({ extended: true }));
 server.use(cors());
 
 server.get("/", (_req, res) => res.redirect("/home"));
-server.get("/home", (_req, res) => {
-    res.sendFile(content_path);
-});
+server.get("/home", (_req, res) => res.sendFile(content_path));
 
 server.post("/inquireUser", async (req, res) => {
     const { body: { user } } = req;
@@ -49,8 +47,16 @@ server.post("/jobs", async (req, res) => {
         await cursor.forEach((job) => collector.push(job));
         res.send(collector);
     } else {
-        Database.insert("jobs", body);
-        res.send();
+        const result = await Database.insert("jobs", body);
+        if ("insertedId" in result) {
+            res.send(result.insertedId);
+        } else if ("insertedIds" in result) {
+            const { insertedIds } = result;
+            const collected = Object.keys(insertedIds).map(key => insertedIds[Number(key)])
+            res.send(collected);
+        } else {
+            res.send(undefined);
+        }
     }
 });
 

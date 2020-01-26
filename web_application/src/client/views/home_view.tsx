@@ -11,6 +11,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faIdBadge } from '@fortawesome/free-solid-svg-icons';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import DynamicJobMap from "../utilities/dynamic_job_map";
+import { MapUtils } from "../utilities/map_types";
+import { Comparators, Ordering, Compare } from "../utilities/comparators";
 
 library.add(faIdBadge);
 
@@ -23,15 +25,28 @@ export interface HomeViewProps {
 export default class HomeView extends React.Component<HomeViewProps> {
     @observable private filterBox?: HTMLInputElement;
     @observable private openCreation: boolean = false;
-    @observable private jobs: Job[] = [];
     @observable private jobsMap?: DynamicJobMap;
 
     componentDidMount() {
         Server.Post("/jobs").then(action(response => {
             let initial = new Map<string, Job>();
             if (Array.isArray(response) && response.length) {
-                response.forEach(job => initial.set(job._id, job));
-                this.jobs = response;
+                response.forEach(({
+                    _id,
+                    company,
+                    jobTitle,
+                    appDate,
+                    status,
+                    datePosted,
+                    recruiterName,
+                    recruiterEmail,
+                    applicationWay,
+                    referralOptions
+                }) => {
+                    const job = new Job(company, jobTitle, appDate, status, datePosted, recruiterName, recruiterEmail, applicationWay, referralOptions);
+                    job.id = _id;
+                    initial.set(_id, job);
+                });
             }
             this.jobsMap = new DynamicJobMap(initial);
         }));
@@ -39,8 +54,10 @@ export default class HomeView extends React.Component<HomeViewProps> {
 
     @action
     addJob = (newJob: Job) => {
-        this.jobs.push(newJob);
-        Server.Post("/jobs", newJob);
+        Server.Post("/jobs", newJob).then(_id => {
+            newJob.id = _id;
+            this.jobsMap?.insert(_id, newJob);
+        });
     }
 
     @action
@@ -48,8 +65,15 @@ export default class HomeView extends React.Component<HomeViewProps> {
         this.openCreation = false;
     }
 
+    private descending = true;
+
     @computed
     private get renderPage() {
+        const { jobsMap } = this;
+        let renderedJobs = (null);
+        if (jobsMap) {
+            renderedJobs = MapUtils.valuesOf(jobsMap.current).map(job => (<ApplicationRec listedJob={job} ></ApplicationRec>))
+        }
         if (this.openCreation) {
             return <AddJobPage close={this.close} addJob={this.addJob} />
         } else {
@@ -76,7 +100,36 @@ export default class HomeView extends React.Component<HomeViewProps> {
                         <FontAwesomeIcon icon={faIdBadge} size={"3x"} ></FontAwesomeIcon>
                     </a>
                 </div>
-                {this.jobs.map(job => (<ApplicationRec listedJob={job} ></ApplicationRec>))}
+                <div
+                    className={"job-rect"}
+                    style={{ marginBottom: 40 }}
+                    onClick={() => {
+                        const { jobsMap } = this;
+                        if (!jobsMap) {
+                            return;
+                        }
+                        let ordering = jobsMap.currentOrdering;
+                        if (this.descending) {
+                            this.descending = false;
+                        } else {
+                            this.descending = true;
+                            ordering = this.jobsMap?.currentOrdering === Ordering.STATUS ? Ordering.COMPANY : Ordering.STATUS;
+                        }
+                        if (ordering !== "unsorted") {
+                            jobsMap.invalidateOrdering(ordering);
+                        }
+                        let comparator: Compare.Map.ByValue<Job>;
+                        if (ordering === "unsorted") {
+                            comparator = Comparators.unsorted;
+                        } else {
+                            comparator = Comparators.sorted(ordering, this.descending);
+                        }
+                        jobsMap.sortBy(comparator, ordering);
+                    }}
+                >
+                    <div>SORTED BY {this.jobsMap?.currentOrdering}</div>
+                </div>
+                {renderedJobs}
             </div>
         }
 
