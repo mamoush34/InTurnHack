@@ -12,7 +12,7 @@ export function src(target: string) {
 
 export namespace Server {
 
-    export async function Post(relativeRoute: string, body: any) {
+    export async function Post(relativeRoute: string, body?: any) {
         return handleRequest({
             method: "POST",
             uri: origin + relativeRoute,

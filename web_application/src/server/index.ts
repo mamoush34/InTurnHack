@@ -3,6 +3,7 @@ import { resolve } from "path";
 import * as cors from "cors";
 import * as bodyParser from "body-parser";
 import { Database } from "./database";
+import { Job } from "../client/models/Job";
 
 const port = 1050;
 const database = {
@@ -32,6 +33,19 @@ server.post("/inquireUser", async (req, res) => {
     users.findOne({ email: user }, { projection: { _id: 0 } }, (error, result) => {
         res.send(error ? undefined : result);
     });
+});
+
+server.post("/jobs", async (req, res) => { 
+    const { body } = req;
+    if (!Object.keys(body).length) {
+        const jobs = await Database.getOrCreateCollection("jobs");
+        const cursor = jobs.find();
+        let collector: Job[] = [];
+        await cursor.forEach((job) => collector.push(job));
+        res.send(collector);
+    } else {
+        Database.insert("jobs", body);
+    }
 });
 
 (async () => {

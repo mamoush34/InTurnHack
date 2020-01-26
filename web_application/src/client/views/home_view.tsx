@@ -1,11 +1,12 @@
 
 import * as React from "react";
 import "./home_view.scss";
-import { observable, action } from "mobx";
+import { observable, action, runInAction } from "mobx";
 import { observer } from "mobx-react";
 import { Job } from "../models/Job";
 import { ApplicationRec } from "./application_rec";
 import AddJobPage from "./add_job_page";
+import { Server } from "../utilities";
 
 export interface HomeViewProps {
     background: string;
@@ -13,16 +14,27 @@ export interface HomeViewProps {
 
 @observer
 export default class HomeView extends React.Component<HomeViewProps> {
-    @observable private counter = 0;
     @observable private filterBox?: HTMLInputElement;
     @observable private openCreation : boolean = false;
     @observable private jobs: Job[] = [];
+
+
+    componentDidMount() {
+        Server.Post("/jobs").then(action(response => {
+            console.log(response);
+            if (Array.isArray(response) && response.length) {
+                this.jobs = response;
+            }
+        }));
+    }
 
     @action
     addJob = (newJob: Job) => {
         this.jobs.push(newJob);
         console.log("Added: " + newJob);
         console.log("Title" + newJob.jobTitle);
+        Server.Post("/jobs", newJob);
+
     }
 
     @action

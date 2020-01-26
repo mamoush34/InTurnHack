@@ -3,6 +3,7 @@ import { observable, action } from "mobx";
 import { observer } from "mobx-react";
 import { Job } from "../models/Job";
 import "./add_job_page.scss"
+import { Server } from "../utilities";
 
 interface AddJobPageProps {
     close : () => void;
@@ -32,6 +33,7 @@ export default class AddJobPage extends React.Component<AddJobPageProps> {
     createAndAddJob = () => {
         let newJob = new Job(this.companyInput?.value!, this.jobTitleInput?.value!, this.appDateInput?.value!, this.decipherStatus(this.statusInput?.value!), this.datePostedInput?.value!, this.recruiterNameInput?.value!, this.recruiterEmailInput?.value!, this.applicationWayInput?.value!, []);
         this.props.addJob(newJob);
+
     }
 
     decipherStatus = (statusVal : string) => {
