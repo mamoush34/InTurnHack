@@ -13,12 +13,8 @@ interface ApplicationRecProps {
 
 @observer
 export class ApplicationRec extends React.Component<ApplicationRecProps> {
+    @observable private colorOptions: Map<number, string> = new Map();
 
-    @observable private colorOptions : Map<number, string> = new Map();
-
-
-
-    
     renderJobColor = () => {
         switch (this.props.listedJob.status) {
             case "Pending":
@@ -35,23 +31,21 @@ export class ApplicationRec extends React.Component<ApplicationRecProps> {
     @action
     renderSelectOptions = () => {
         this.colorOptions = new Map();
-        switch(this.props.listedJob.status) {
-            case "Pending" :
-               this.colorOptions.set(Status.PENDING,"Pending");
-               this.colorOptions.set(Status.ACCEPTED, "Accepted");
-               this.colorOptions.set(Status.REJECTED, "Rejected");
-
-            case "Accepted" :
+        switch (this.props.listedJob.status) {
+            case "Pending":
+                this.colorOptions.set(Status.PENDING, "Pending");
                 this.colorOptions.set(Status.ACCEPTED, "Accepted");
-                this.colorOptions.set(Status.PENDING,"Pending");
                 this.colorOptions.set(Status.REJECTED, "Rejected");
-            case "Rejected" :
+            case "Accepted":
+                this.colorOptions.set(Status.ACCEPTED, "Accepted");
+                this.colorOptions.set(Status.PENDING, "Pending");
+                this.colorOptions.set(Status.REJECTED, "Rejected");
+            case "Rejected":
                 this.colorOptions.set(Status.REJECTED, "Rejected");
                 this.colorOptions.set(Status.ACCEPTED, "Accepted");
-                this.colorOptions.set(Status.PENDING,"Pending");     
+                this.colorOptions.set(Status.PENDING, "Pending");
             default:
                 return;
-
         }
     }
 
@@ -81,7 +75,7 @@ export class ApplicationRec extends React.Component<ApplicationRecProps> {
 
     componentDidUpdate() {
         document.querySelectorAll(".custom-option").forEach(element => {
-            element.addEventListener('click', function(this: any) {
+            element.addEventListener('click', function (this: any) {
                 if (!this.classList.contains('selected')) {
                     this.parentNode.querySelector('.custom-option.selected').classList.remove('selected');
                     this.classList.add('selected');
@@ -89,16 +83,14 @@ export class ApplicationRec extends React.Component<ApplicationRecProps> {
                 }
             })
         });
-
     }
 
     onClickUpdate = (newStatus: string) => {
         this.props.listedJob.status = newStatus;
-        const newObject = {job : this.props.listedJob, field: "status"};
+        const newObject = { job: this.props.listedJob, field: "status" };
         Server.Post("/jobUpdate", newObject);
 
     }
-
 
     render() {
         const { listedJob } = this.props;
@@ -125,10 +117,10 @@ export class ApplicationRec extends React.Component<ApplicationRecProps> {
                             </div>
                             <div className="custom-options">
                                 {Array.from(this.colorOptions.values()).map((value, index) => {
-                                    if(index == 0) {
+                                    if (index == 0) {
                                         return <span className="custom-option selected" data-value={index} onClick={() => this.onClickUpdate(value)}>{value}</span>
 
-                                    } else  {
+                                    } else {
                                         return <span className="custom-option" data-value={index} onClick={() => this.onClickUpdate(value)}>{value}</span>
                                     }
 
