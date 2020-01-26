@@ -35,14 +35,14 @@ export default class App extends React.Component<{}> {
     };
 
     private searchForEmbeddedBoards = async () => {
-        const response = await this.identifiedAction("openEmbeddedBoards");
+        const response = await this.identifiedAction("__openEmbeddedBoards");
         if (response === false) {
             alert("No embedded greenhouse.io content was found.");
         }
     };
 
     private beginApplication = async () => {
-        await this.identifiedAction("logApplicationEntry");
+        await this.identifiedAction("__logApplicationEntry");
         await this.searchForEmbeddedBoards();
     }
 

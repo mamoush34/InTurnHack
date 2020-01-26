@@ -22,8 +22,8 @@ server.use(bodyParser.json({ limit: "10mb" }));
 server.use(bodyParser.urlencoded({ extended: true }));
 server.use(cors());
 
-server.get("/", (_req, res) => res.redirect("/logo"));
-server.get("/logo", (_req, res) => {
+server.get("/", (_req, res) => res.redirect("/home"));
+server.get("/home", (_req, res) => {
     res.sendFile(content_path);
 });
 
