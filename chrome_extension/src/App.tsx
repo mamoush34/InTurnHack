@@ -43,6 +43,22 @@ export default class App extends React.Component<{}> {
         }
     };
 
+    private get renderGoogleUserIcon() {
+        if (!this.userInfo) {
+            return (null);
+        }
+        const { email, picture } = this.userInfo;
+        return (
+            <>
+                <img
+                    className={"user-icon"}
+                    src={picture}
+                />
+                <span className={"email"}>{email}</span>
+            </>
+        );
+    }
+
     render() {
         if (!this.userInfo) {
             return (
@@ -51,6 +67,7 @@ export default class App extends React.Component<{}> {
         }
         return (
             <div className="App">
+                {this.renderGoogleUserIcon}
                 <header className="App-header">
                     <p
                         className={"greenhouse-prompt"}
@@ -58,8 +75,8 @@ export default class App extends React.Component<{}> {
                     >
                         Capture and begin application!
                     </p>
-                    <span onClick={this.logout}>Log Out</span>
                 </header>
+                <span className={"log-out"} onClick={this.logout}>Log Out</span>
             </div>
         );
     }
