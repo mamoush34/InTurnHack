@@ -14,7 +14,7 @@
     },
     "content_scripts": [
         {
-          "js": ["./static/js/jquery.js", "./static/js/greenhouse_finder.js"],
+          "js": ["./static/js/jquery.js", "./static/js/index.js"],
           "matches": ["<all_urls>"]
         },
         {
