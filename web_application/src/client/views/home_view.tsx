@@ -10,9 +10,7 @@ import { Server } from "../utilities/utilities";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faIdBadge } from '@fortawesome/free-solid-svg-icons';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { MapUtils } from "../utilities/map_types";
-import { Comparators, Ordering, Compare } from "../utilities/comparators";
-import DynamicOrderedMap from "../utilities/dynamic_map";
+import { DynamicInteractiveMap, Comparators, Compare } from "dynamicinteractivemap";
 
 library.add(faIdBadge);
 
@@ -24,8 +22,8 @@ export interface HomeViewProps {
 export default class HomeView extends React.Component<HomeViewProps> {
     @observable private filterBox?: HTMLInputElement;
     @observable private openCreation: boolean = false;
-    @observable private jobsMap?: DynamicOrderedMap<string, Job>;
-    private descending = true;
+    @observable private jobsMap?: DynamicInteractiveMap<string, Job>;
+    @observable private descending = true;
 
     componentDidMount() {
         Server.Post("/jobs").then(action(response => {
@@ -48,7 +46,7 @@ export default class HomeView extends React.Component<HomeViewProps> {
                     initial.set(_id, job);
                 });
             }
-            this.jobsMap = new DynamicOrderedMap(initial, Ordering.STATUS);
+            this.jobsMap = new DynamicInteractiveMap(initial, "unordered");
         }));
     }
 
@@ -70,7 +68,7 @@ export default class HomeView extends React.Component<HomeViewProps> {
         return <div
             className={"job-rect"}
             style={{ marginBottom: 40 }}
-            onClick={() => {
+            onClick={action(() => {
                 const { jobsMap } = this;
                 if (!jobsMap) {
                     return;
@@ -80,21 +78,21 @@ export default class HomeView extends React.Component<HomeViewProps> {
                     this.descending = false;
                 } else {
                     this.descending = true;
-                    ordering = this.jobsMap?.currentOrdering === Ordering.STATUS ? Ordering.COMPANY : Ordering.STATUS;
+                    ordering = this.jobsMap?.currentOrdering === "status" ? "company" : "status";
                 }
-                if (ordering !== "unsorted") {
+                if (ordering !== "unordered") {
                     jobsMap.invalidateOrdering(ordering);
                 }
                 let comparator: Compare.Map.ByValue<Job>;
-                if (ordering === "unsorted") {
+                if (ordering === "unordered") {
                     comparator = Comparators.unsorted;
                 } else {
                     comparator = Comparators.sorted(ordering, this.descending);
                 }
                 jobsMap.sortBy(comparator, ordering);
-            }}
+            })}
         >
-            <div>SORTED BY {this.jobsMap?.currentOrdering}</div>
+            <div>SORTED BY {this.jobsMap?.currentOrdering} ({this.descending ? "DESCENDING" : "ASCENDING"})</div>
         </div>
     }
 
@@ -103,7 +101,7 @@ export default class HomeView extends React.Component<HomeViewProps> {
         const { jobsMap } = this;
         let renderedJobs = (null);
         if (jobsMap) {
-            renderedJobs = MapUtils.valuesOf(jobsMap.current).map(job => (<ApplicationRec listedJob={job} ></ApplicationRec>))
+            renderedJobs = jobsMap.render.map(job => (<ApplicationRec listedJob={job} ></ApplicationRec>))
         }
         if (this.openCreation) {
             return <AddJobPage close={this.close} addJob={this.addJob} />
