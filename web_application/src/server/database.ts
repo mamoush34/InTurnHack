@@ -44,7 +44,7 @@ export namespace Database {
                 resolved.insertMany(data, options || {}, (error, result) => {
                     error ? reject(error) : resolve(result);
                 });
-            }); 
+            });
         } else {
             return new Promise<InsertOneWriteOpResult<any>>((resolve, reject) => {
                 resolved.insertOne(data, (error, result) => {
@@ -54,14 +54,11 @@ export namespace Database {
         }
     }
 
-    export async function updateField(collection: string, data: any, updatedField: string, options?: CollectionInsertManyOptions) {
+    export async function updateField(collection: string, data: any, updatedField: string) {
         const resolved = await getOrCreateCollection(collection);
-        const $set : any = {};
+        const $set: any = {};
         $set[updatedField] = data[updatedField];
-        resolved.updateOne({_id: new ObjectId(data._id)}, {
-            $set
-        })
-
+        return resolved.updateOne({ _id: new ObjectId(data._id) }, { $set });
     }
 
     export async function clearCollections(...collections: string[]) {
