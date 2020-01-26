@@ -13,7 +13,6 @@ chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
         if (found) {
             const childReadyHandler = e => {
                 if (e.data.loaded === true) {
-                    console.log("Child loaded!", e);
                     child.postMessage({
                         action: "autofillForUser",
                         user: request.user
