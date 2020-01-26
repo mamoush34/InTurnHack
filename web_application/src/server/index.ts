@@ -35,6 +35,11 @@ server.post("/inquireUser", async (req, res) => {
     });
 });
 
+server.get("/delete", (_req, res) => {
+    Database.clearCollections("jobs");
+    res.redirect("/");
+});
+
 server.post("/jobs", async (req, res) => { 
     const { body } = req;
     if (!Object.keys(body).length) {
@@ -45,6 +50,7 @@ server.post("/jobs", async (req, res) => {
         res.send(collector);
     } else {
         Database.insert("jobs", body);
+        res.send();
     }
 });
 

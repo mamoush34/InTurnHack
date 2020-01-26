@@ -1,7 +1,7 @@
 const router = new Map();
 
 const handlers = [
-    async function logApplicationEntry(_request, sendResponse) {
+    async function logApplicationEntry({ user }, sendResponse) {
         fetch('http://localhost:1050/jobs', {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -15,7 +15,8 @@ const handlers = [
                 recruiterName: "",
                 recruiterEmail: "",
                 applicationWay: "Online",
-                referralOptions: []
+                referralOptions: [],
+                user,
             })
         });
         sendResponse(true);

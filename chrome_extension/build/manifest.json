@@ -10,7 +10,10 @@
     },
     "oauth2": {
         "client_id": "64901127222-aqoomftj49pgtq0p7pnb9edqcpsvt4kj.apps.googleusercontent.com",
-        "scopes": ["https://www.googleapis.com/auth/gmail.readonly"]
+        "scopes": [
+            "https://www.googleapis.com/auth/gmail.readonly",
+            "https://www.googleapis.com/auth/userinfo.email"
+        ]
     },
     "content_scripts": [
         {

@@ -7,10 +7,14 @@ $(document).ready(() => {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ user })
-                })).json();
-                Object.keys(classNames).forEach(field => $(`#${classNames[field]}`).val(response[field]));
+                })).text();
+                if (!response) {
+                    return alert("No user registered with companion web application, so autofill failed.");
+                }
+                const parsed = JSON.parse(response);
+                Object.keys(classNames).forEach(field => $(`#${classNames[field]}`).val(parsed[field]));
             } catch (error) {
-                console.warn("Unable to connect to the server.");
+                console.warn("Unable to connect to the server.", error);
             }
         }
     });

@@ -1,54 +1,50 @@
 import React from 'react';
 import './App.css';
 import { messageActiveTab } from './messaging';
-import { getToken, logout } from './authorization';
+import { logout, getUserInfo, UserInfo } from './authorization';
 import { observable, runInAction } from 'mobx';
 import { observer } from 'mobx-react';
 import logo from "./logo.svg";
 
 @observer
 export default class App extends React.Component<{}> {
-    @observable private token: string | undefined = undefined;
+    @observable private userInfo?: UserInfo;
 
     componentWillMount() {
         this.login();   
     }
     
     private login = async () => {
-        const token = await getToken();
-        runInAction(() => this.token = token);
+        const userInfo = await getUserInfo();
+        runInAction(() => this.userInfo = userInfo);
     }
 
     private logout = async () => {
-        const token = this.token;
-        if (token) {
-            await logout(token);
-            window.close();
-        }
+        await logout();
+        window.close();
     }
 
-    private identifiedAction = (action: string) => {
-        return messageActiveTab({
-            action,
-            user: "samuel_wilkins@brown.edu"
+    private apply = async () => {
+        const { userInfo  }= this;
+        if (!userInfo) {
+            return alert("This session is not associated with a valid user. Please retry authentication.");
+        }
+        const { email } = userInfo;
+        await messageActiveTab({
+            action: "__logApplicationEntry",
+            user: email
         });
-    };
-
-    private searchForEmbeddedBoards = async () => {
-        const response = await this.identifiedAction("__openEmbeddedBoards");
+        const response = await messageActiveTab({
+            action: "__openEmbeddedBoards",
+            user: email
+        });
         if (response === false) {
             alert("No embedded greenhouse.io content was found.");
         }
     };
 
-    private beginApplication = async () => {
-        await this.identifiedAction("__logApplicationEntry");
-        await this.searchForEmbeddedBoards();
-    }
-
     render() {
-        const token = this.token;
-        if (!token) {
+        if (!this.userInfo) {
             return (
                 <div style={{ background: `url(${logo})`, margin: 50 }} />
             );
@@ -58,9 +54,9 @@ export default class App extends React.Component<{}> {
                 <header className="App-header">
                     <p
                         className={"greenhouse-prompt"}
-                        onClick={this.beginApplication}
+                        onClick={this.apply}
                     >
-                        Begin application!
+                        Capture and begin application!
                     </p>
                     <span onClick={this.logout}>Log Out</span>
                 </header>
