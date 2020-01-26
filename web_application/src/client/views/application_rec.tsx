@@ -7,9 +7,8 @@ import "./application_rec.scss";
 import { Status } from "./add_job_page";
 import { Server } from "../utilities";
 
-
 interface ApplicationRecProps {
-    listedJob : Job
+    listedJob: Job
 }
 
 @observer
@@ -21,16 +20,15 @@ export class ApplicationRec extends React.Component<ApplicationRecProps> {
 
     
     renderJobColor = () => {
-        switch(this.props.listedJob.status) {
-            case "Pending" :
+        switch (this.props.listedJob.status) {
+            case "Pending":
                 return "#FFFF00CC";
-            case "Accepted" :
+            case "Accepted":
                 return "#00FF0033";
-            case "Rejected" :
+            case "Rejected":
                 return "#FF0000AA";
             default:
                 return "whitesmoke";
-
         }
     }
 
@@ -65,15 +63,13 @@ export class ApplicationRec extends React.Component<ApplicationRecProps> {
         this.renderSelectOptions();
 
         document.querySelectorAll(".custom-select-wrapper").forEach(element => {
-            element.addEventListener('click', function(this: any) {
+            element.addEventListener('click', function (this: any) {
                 this.querySelector('.custom-select').classList.toggle('open');
             })
         })
-            
-    
 
         document.querySelectorAll(".custom-option").forEach(element => {
-            element.addEventListener('click', function(this: any) {
+            element.addEventListener('click', function (this: any) {
                 if (!this.classList.contains('selected')) {
                     this.parentNode.querySelector('.custom-option.selected').classList.remove('selected');
                     this.classList.add('selected');
@@ -81,7 +77,6 @@ export class ApplicationRec extends React.Component<ApplicationRecProps> {
                 }
             })
         });
-
     }
 
     componentDidUpdate() {
@@ -107,9 +102,9 @@ export class ApplicationRec extends React.Component<ApplicationRecProps> {
 
     render() {
         const { listedJob } = this.props;
-        return(
-            <div className="job-rect" style={{background: this.renderJobColor()}}>
-                <div className="job-field" id="job-title" style={{width: "40%"}}>
+        return (
+            <div className="job-rect" style={{ background: this.renderJobColor() }}>
+                <div className="job-field" id="job-title" style={{ width: "40%" }}>
                     {listedJob.jobTitle}
                 </div>
                 <div className="job-field" id="company">
@@ -141,11 +136,9 @@ export class ApplicationRec extends React.Component<ApplicationRecProps> {
                             </div>
                         </div>
                     </div>
-                </div>    
+                </div>
             </div>
-
-
         );
-
     }
+
 }

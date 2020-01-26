@@ -11,9 +11,9 @@ export default class App extends React.Component<{}> {
     @observable private userInfo?: UserInfo;
 
     componentWillMount() {
-        this.login();   
+        this.login();
     }
-    
+
     private login = async () => {
         const userInfo = await getUserInfo();
         runInAction(() => this.userInfo = userInfo);
@@ -25,7 +25,7 @@ export default class App extends React.Component<{}> {
     }
 
     private apply = async () => {
-        const { userInfo  }= this;
+        const { userInfo } = this;
         if (!userInfo) {
             return alert("This session is not associated with a valid user. Please retry authentication.");
         }

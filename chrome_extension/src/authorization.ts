@@ -7,7 +7,7 @@ export async function logout(): Promise<void> {
     if (!token) {
         alert("Already logged out!");
         return;
-    } 
+    }
     const response = await window.fetch(`https://accounts.google.com/o/oauth2/revoke?token=${token}`);
     console.log(await response.text());
     return new Promise<void>(resolve => chrome.identity.removeCachedAuthToken({ token }, resolve));
@@ -21,7 +21,7 @@ export interface UserInfo {
     hd: string;
 }
 
-export async function getUserInfo() {    
+export async function getUserInfo() {
     var x = new XMLHttpRequest();
     x.open('GET', `https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${await getToken()}`);
     return new Promise<UserInfo>(resolve => {
