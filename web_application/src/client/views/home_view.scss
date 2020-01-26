@@ -52,20 +52,20 @@
     a.registration {
         color: black;
         // box-shadow: rgba(30, 22, 54, 0.4) 0 0px 0px 2px inset;
-        background: yellow;
-        border-radius: 15px;
+        // background: yellow;
+        // border-radius: 15px;
         position: absolute;
         text-align: center;
-        border: 2px solid black;
-        right : 5.3%;
-        margin-top: 45px;
+        // border: 2px solid black;
+        right : 5.5%;
+        margin-top: 34px;
     }
 
     a.registration:hover {
         //color: rgba(255, 255, 255, 0.85);
-        color: white;
+        color: dodgerblue;
         //box-shadow: rgba(30, 22, 54, 0.7) 0 0px 0px 40px inset;
-        box-shadow: aqua 0 0px 0px 40px inset;
+        // box-shadow: aqua 0 0px 0px 40px inset;
         cursor: pointer;
     }
 
