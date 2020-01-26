@@ -8,3 +8,7 @@ Detailed view of other information like recruiter contact, date posted, method o
 Sorting list items.
 User creation and authentication.
 
+To make webApp: type "npm run make"
+To start webApp at localHost:1050: "npm start"
+
+
