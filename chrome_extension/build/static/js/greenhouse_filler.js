@@ -14,7 +14,7 @@ $(document).ready(() => {
                 const parsed = JSON.parse(response);
                 Object.keys(classNames).forEach(field => $(`#${classNames[field]}`).val(parsed[field]));
             } catch (error) {
-                console.warn("Unable to connect to the server.", error);
+                console.warn("Unable complete autofill.", error);
             }
         }
     });

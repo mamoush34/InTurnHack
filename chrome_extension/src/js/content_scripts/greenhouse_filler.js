@@ -1,12 +1,19 @@
 $(document).ready(() => {
     window.addEventListener("message", async e => {
-        const { action, user } = e.data;
+        const {
+            action,
+            user
+        } = e.data;
         if (action && action === "autofillForUser" && user) {
             try {
                 const response = await (await fetch('http://localhost:1050/inquireUser', {
                     method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ user })
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        user
+                    })
                 })).text();
                 if (!response) {
                     return alert("No user registered with companion web application, so autofill failed.");
@@ -14,11 +21,13 @@ $(document).ready(() => {
                 const parsed = JSON.parse(response);
                 Object.keys(classNames).forEach(field => $(`#${classNames[field]}`).val(parsed[field]));
             } catch (error) {
-                console.warn("Unable to connect to the server.", error);
+                console.warn("Unable complete autofill.", error);
             }
         }
     });
-    window.opener.postMessage({ loaded: true }, "*");
+    window.opener.postMessage({
+        loaded: true
+    }, "*");
 });
 
 const classNames = {

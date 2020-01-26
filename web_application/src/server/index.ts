@@ -27,7 +27,7 @@ server.get("/home", (_req, res) => {
     res.sendFile(content_path);
 });
 
-server.post("/inquireUser", async (req, res) => { 
+server.post("/inquireUser", async (req, res) => {
     const { body: { user } } = req;
     const users = await Database.getOrCreateCollection(database.userCollection)
     users.findOne({ email: user }, { projection: { _id: 0 } }, (error, result) => {
@@ -40,7 +40,7 @@ server.get("/delete", (_req, res) => {
     res.redirect("/");
 });
 
-server.post("/jobs", async (req, res) => { 
+server.post("/jobs", async (req, res) => {
     const { body } = req;
     if (!Object.keys(body).length) {
         const jobs = await Database.getOrCreateCollection("jobs");
@@ -66,7 +66,7 @@ server.post("/jobs", async (req, res) => {
             linked_in: "www.linkedin.com/in/sam-wilkins-173b09132",
             university: "Brown University",
             website: "http://www.samwilkins.me"
-        });    
+        });
     }
     server.listen(port, () => console.log(`Server listening on port ${port}...`));
 })();
