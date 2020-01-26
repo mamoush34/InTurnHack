@@ -1,7 +1,7 @@
 
 import * as React from "react";
 import "./home_view.scss";
-import { observable, action, computed, computed } from "mobx";
+import { observable, action, computed } from "mobx";
 import { observer } from "mobx-react";
 import { Job } from "../models/Job";
 import { ApplicationRec } from "./application_rec";
