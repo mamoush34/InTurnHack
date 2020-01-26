@@ -5,7 +5,7 @@ import { observer } from "mobx-react";
 import { Job } from "../models/Job";
 import "./application_rec.scss";
 import { Status } from "./add_job_page";
-import { Server } from "../utilities";
+import { Server } from "../utilities/utilities";
 
 interface ApplicationRecProps {
     listedJob: Job
