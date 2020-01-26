@@ -27,12 +27,24 @@ export default class App extends React.Component<{}> {
         }
     }
 
-    private searchForEmbeddedBoards = async () => {
-        messageActiveTab({
-            action: "searchForEmbeddedBoards",
+    private identifiedAction = (action: string) => {
+        return messageActiveTab({
+            action,
             user: "samuel_wilkins@brown.edu"
         });
     };
+
+    private searchForEmbeddedBoards = async () => {
+        const response = await this.identifiedAction("openEmbeddedBoards");
+        if (response === false) {
+            alert("No embedded greenhouse.io content was found.");
+        }
+    };
+
+    private beginApplication = async () => {
+        await this.identifiedAction("logApplicationEntry");
+        await this.searchForEmbeddedBoards();
+    }
 
     render() {
         const token = this.token;
@@ -46,9 +58,9 @@ export default class App extends React.Component<{}> {
                 <header className="App-header">
                     <p
                         className={"greenhouse-prompt"}
-                        onClick={this.searchForEmbeddedBoards}
+                        onClick={this.beginApplication}
                     >
-                        Check page for embedded greenhouse.io application boards.
+                        Begin application!
                     </p>
                     <span onClick={this.logout}>Log Out</span>
                 </header>
