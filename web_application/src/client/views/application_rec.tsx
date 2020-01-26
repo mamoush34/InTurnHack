@@ -5,6 +5,7 @@ import { observer } from "mobx-react";
 import { Job } from "../models/Job";
 import "./application_rec.scss";
 import { Status } from "./add_job_page";
+import { Server } from "../utilities";
 
 
 interface ApplicationRecProps {
@@ -13,6 +14,10 @@ interface ApplicationRecProps {
 
 @observer
 export class ApplicationRec extends React.Component<ApplicationRecProps> {
+
+    @observable private colorOptions : Map<number, string> = new Map();
+
+
 
     
     renderJobColor = () => {
@@ -29,10 +34,36 @@ export class ApplicationRec extends React.Component<ApplicationRecProps> {
         }
     }
 
+    @action
+    renderSelectOptions = () => {
+        this.colorOptions = new Map();
+        switch(this.props.listedJob.status) {
+            case "Pending" :
+               this.colorOptions.set(Status.PENDING,"Pending");
+               this.colorOptions.set(Status.ACCEPTED, "Accepted");
+               this.colorOptions.set(Status.REJECTED, "Rejected");
+
+            case "Accepted" :
+                this.colorOptions.set(Status.ACCEPTED, "Accepted");
+                this.colorOptions.set(Status.PENDING,"Pending");
+                this.colorOptions.set(Status.REJECTED, "Rejected");
+            case "Rejected" :
+                this.colorOptions.set(Status.REJECTED, "Rejected");
+                this.colorOptions.set(Status.ACCEPTED, "Accepted");
+                this.colorOptions.set(Status.PENDING,"Pending");     
+            default:
+                return;
+
+        }
+    }
+
+    @action
     componentDidMount() {
         // document.querySelector('.custom-select-wrapper')?.addEventListener('click', function() {
         //     document.querySelector('.custom-select')?.classList.toggle('open');
         // })
+        this.renderSelectOptions();
+
         document.querySelectorAll(".custom-select-wrapper").forEach(element => {
             element.addEventListener('click', function(this: any) {
                 this.querySelector('.custom-select').classList.toggle('open');
@@ -50,6 +81,26 @@ export class ApplicationRec extends React.Component<ApplicationRecProps> {
                 }
             })
         });
+
+    }
+
+    componentDidUpdate() {
+        document.querySelectorAll(".custom-option").forEach(element => {
+            element.addEventListener('click', function(this: any) {
+                if (!this.classList.contains('selected')) {
+                    this.parentNode.querySelector('.custom-option.selected').classList.remove('selected');
+                    this.classList.add('selected');
+                    this.closest('.custom-select').querySelector('.custom-select__trigger span').textContent = this.textContent;
+                }
+            })
+        });
+
+    }
+
+    onClickUpdate = (newStatus: string) => {
+        this.props.listedJob.status = newStatus;
+        const newObject = {job : this.props.listedJob, field: "status"};
+        Server.Post("/jobUpdate", newObject);
 
     }
 
@@ -78,9 +129,15 @@ export class ApplicationRec extends React.Component<ApplicationRecProps> {
                                 <div className="arrow"></div>
                             </div>
                             <div className="custom-options">
-                                <span className="custom-option selected" data-value={Status.PENDING}>{listedJob.status}</span>
-                                <span className="custom-option" data-value={Status.ACCEPTED}>Accepted</span>
-                                <span className="custom-option" data-value={Status.REJECTED}>Rejected</span>
+                                {Array.from(this.colorOptions.values()).map((value, index) => {
+                                    if(index == 0) {
+                                        return <span className="custom-option selected" data-value={index} onClick={() => this.onClickUpdate(value)}>{value}</span>
+
+                                    } else  {
+                                        return <span className="custom-option" data-value={index} onClick={() => this.onClickUpdate(value)}>{value}</span>
+                                    }
+
+                                })}
                             </div>
                         </div>
                     </div>

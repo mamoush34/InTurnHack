@@ -7,6 +7,7 @@ interface Contact {
 }
 
 export class Job {
+    
     @observable public company: string;
     @observable public jobTitle: string;
     @observable public appDate : string;

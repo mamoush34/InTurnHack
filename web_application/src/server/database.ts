@@ -1,4 +1,4 @@
-import { MongoClient, Collection, Db, InsertOneWriteOpResult, InsertWriteOpResult, CollectionInsertManyOptions } from "mongodb";
+import { MongoClient, Collection, Db, InsertOneWriteOpResult, InsertWriteOpResult, CollectionInsertManyOptions, ObjectId } from "mongodb";
 
 export namespace Database {
 
@@ -52,6 +52,16 @@ export namespace Database {
                 });
             });
         }
+    }
+
+    export async function updateField(collection: string, data: any, updatedField: string, options?: CollectionInsertManyOptions) {
+        const resolved = await getOrCreateCollection(collection);
+        const $set : any = {};
+        $set[updatedField] = data[updatedField];
+        resolved.updateOne({_id: new ObjectId(data._id)}, {
+            $set
+        })
+
     }
 
     export async function clearCollections(...collections: string[]) {

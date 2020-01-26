@@ -54,6 +54,12 @@ server.post("/jobs", async (req, res) => {
     }
 });
 
+server.post("/jobUpdate", async (req, res) => {
+    const { body } = req;
+    await Database.updateField("jobs", body.job, body.field);
+    res.send();
+});
+
 (async () => {
     const { userCollection, name } = database;
     await Database.connect(name);
