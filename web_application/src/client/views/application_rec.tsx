@@ -15,10 +15,7 @@ interface ApplicationRecProps {
 export class ApplicationRec extends React.Component<ApplicationRecProps> {
 
     @observable private colorOptions : Map<number, string> = new Map();
-
-
-
-    
+   
     renderJobColor = () => {
         switch (this.props.listedJob.status) {
             case "Pending":
@@ -57,9 +54,6 @@ export class ApplicationRec extends React.Component<ApplicationRecProps> {
 
     @action
     componentDidMount() {
-        // document.querySelector('.custom-select-wrapper')?.addEventListener('click', function() {
-        //     document.querySelector('.custom-select')?.classList.toggle('open');
-        // })
         this.renderSelectOptions();
 
         document.querySelectorAll(".custom-select-wrapper").forEach(element => {
@@ -113,9 +107,6 @@ export class ApplicationRec extends React.Component<ApplicationRecProps> {
                 <div className="job-field" id="app-date">
                     {listedJob.appDate}
                 </div>
-                {/* <div className="job-field" id="status">
-                    {this.props.listedJob.status}
-                </div> */}
                 <div className="job-field" id="status">
                     <div className="custom-select-wrapper">
                         <div className="custom-select">
