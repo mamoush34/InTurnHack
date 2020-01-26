@@ -1,5 +1,5 @@
 import { observable } from "mobx";
-import { Matchable } from "../utilities/dynamic_map";
+import { Matchable } from "dynamicinteractivemap";
 
 interface Contact {
     name: string,
