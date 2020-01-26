@@ -6,7 +6,7 @@ import { observer } from "mobx-react";
 import { Job } from "../models/Job";
 import { ApplicationRec } from "./application_rec";
 import AddJobPage from "./add_job_page";
-import { Server } from "../utilities";
+import { Server } from "../utilities/utilities";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faIdBadge } from '@fortawesome/free-solid-svg-icons';
 import { library } from '@fortawesome/fontawesome-svg-core';
