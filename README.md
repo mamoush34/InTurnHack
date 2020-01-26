@@ -12,4 +12,8 @@ To make webApp: type "npm run make"
 
 To start webApp at localHost:1050: "npm start"
 
+To make chrome extension: in its folder trype "npm run make"
+
+To use it: You go to chrome://extensions on your browser, and then click load unpacked. Then select the build directiory inside chrome extension subdirectory. It should be added.
+
 
