@@ -10,6 +10,7 @@ import { Server } from "../utilities/utilities";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faIdBadge } from '@fortawesome/free-solid-svg-icons';
 import { library } from '@fortawesome/fontawesome-svg-core';
+import DynamicJobMap from "../utilities/dynamic_job_map";
 
 library.add(faIdBadge);
 
@@ -23,12 +24,16 @@ export default class HomeView extends React.Component<HomeViewProps> {
     @observable private filterBox?: HTMLInputElement;
     @observable private openCreation: boolean = false;
     @observable private jobs: Job[] = [];
+    @observable private jobsMap?: DynamicJobMap;
 
     componentDidMount() {
         Server.Post("/jobs").then(action(response => {
+            let initial = new Map<string, Job>();
             if (Array.isArray(response) && response.length) {
+                response.forEach(job => initial.set(job._id, job));
                 this.jobs = response;
             }
+            this.jobsMap = new DynamicJobMap(initial);
         }));
     }
 
