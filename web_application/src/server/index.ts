@@ -56,7 +56,10 @@ server.post("/jobs", async (req, res) => {
             first_name: "Samuel",
             last_name: "Wilkins",
             email: "samuel_wilkins@brown.edu",
-            phone: "4158239674"
+            phone: "4158239674",
+            linked_in: "www.linkedin.com/in/sam-wilkins-173b09132",
+            university: "Brown University",
+            website: "http://www.samwilkins.me"
         });    
     }
     server.listen(port, () => console.log(`Server listening on port ${port}...`));

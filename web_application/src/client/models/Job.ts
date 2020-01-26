@@ -20,8 +20,8 @@ export class Job {
     constructor(company: string, jobTitle: string, appDate : string, status : string, datePosted : string, recruiterName: string, recruiterEmail: string, applicationWay: string, referralOptions : Contact[]) {
         this.company = company;
         this.jobTitle = jobTitle;
-        this. appDate = appDate;
-        this. status = status;
+        this.appDate = appDate;
+        this.status = status;
         this.datePosted = datePosted;
         this.recruiterName = recruiterName;
         this.recruiterEmail = recruiterEmail;

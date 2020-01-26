@@ -55,16 +55,17 @@ export class ApplicationRec extends React.Component<ApplicationRecProps> {
 
 
     render() {
+        const { listedJob } = this.props;
         return(
             <div className="job-rect" style={{background: this.renderJobColor()}}>
                 <div className="job-field" id="job-title" style={{width: "40%"}}>
-                    {this.props.listedJob.jobTitle}
+                    {listedJob.jobTitle}
                 </div>
                 <div className="job-field" id="company">
-                    {this.props.listedJob.company}
+                    {listedJob.company}
                 </div>
                 <div className="job-field" id="app-date">
-                    {this.props.listedJob.appDate}
+                    {listedJob.appDate}
                 </div>
                 {/* <div className="job-field" id="status">
                     {this.props.listedJob.status}
@@ -72,11 +73,12 @@ export class ApplicationRec extends React.Component<ApplicationRecProps> {
                 <div className="job-field" id="status">
                     <div className="custom-select-wrapper">
                         <div className="custom-select">
-                            <div className="custom-select__trigger"><span>Tesla</span>
+                            <div className="custom-select__trigger">
+                                <span>{listedJob.status}</span>
                                 <div className="arrow"></div>
                             </div>
                             <div className="custom-options">
-                                <span className="custom-option selected" data-value={Status.PENDING}>this.props.listedJob.status</span>
+                                <span className="custom-option selected" data-value={Status.PENDING}>{listedJob.status}</span>
                                 <span className="custom-option" data-value={Status.ACCEPTED}>Accepted</span>
                                 <span className="custom-option" data-value={Status.REJECTED}>Rejected</span>
                             </div>
