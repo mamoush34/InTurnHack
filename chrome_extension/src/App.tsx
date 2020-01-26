@@ -43,7 +43,7 @@ export default class App extends React.Component<{}> {
         }
     };
 
-    private get renderGoogleUserIcon() {
+    private get renderUserHeader() {
         if (!this.userInfo) {
             return (null);
         }
@@ -67,7 +67,7 @@ export default class App extends React.Component<{}> {
         }
         return (
             <div className="App">
-                {this.renderGoogleUserIcon}
+                {this.renderUserHeader}
                 <header className="App-header">
                     <p
                         className={"greenhouse-prompt"}
