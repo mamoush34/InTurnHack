@@ -65,16 +65,16 @@ export default class HomeView extends React.Component<HomeViewProps> {
                             }
                         }}
                     />
+                    <a className="registration" id="register" title="Add Job!" onClick={() => {
+                        this.openCreation = true;
+                    }}>
+                        <FontAwesomeIcon icon={faIdBadge} size={"3x"} ></FontAwesomeIcon>
+                    </a>
                 </div>
-                <a className="registration" id="register" title="Add Job!" onClick={() => {
-                    this.openCreation = true;
-                }}>
-                    <FontAwesomeIcon icon={faIdBadge} size={"3x"} ></FontAwesomeIcon>
-                </a>
                 {this.jobs.map(job => (<ApplicationRec listedJob={job} ></ApplicationRec>))}
             </div>
         }
-        
+
     }
 
     render() {
