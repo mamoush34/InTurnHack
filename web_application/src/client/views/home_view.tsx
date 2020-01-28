@@ -81,7 +81,7 @@ export default class HomeView extends React.Component<HomeViewProps> {
                     ordering = this.jobsMap?.currentOrdering === "status" ? "company" : "status";
                 }
                 if (ordering !== "unordered") {
-                    jobsMap.invalidateOrdering(ordering);
+                    jobsMap.invalidateOrderingFor(ordering);
                 }
                 let comparator: Compare.Map.ByValue<Job>;
                 if (ordering === "unordered") {

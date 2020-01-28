@@ -29,7 +29,7 @@
         "cors": "^2.8.5",
         "cross-env": "^6.0.3",
         "css-loader": "^3.2.0",
-        "dynamicinteractivemap": "^1.0.4",
+        "dynamicinteractivemap": "^1.0.5",
         "express": "^4.17.1",
         "file-loader": "^4.2.0",
         "mobx": "^5.15.0",
