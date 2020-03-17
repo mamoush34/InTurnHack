@@ -51,12 +51,7 @@ export default class HomeView extends React.Component<HomeViewProps> {
     }
 
     @action
-    addJob = (newJob: Job) => {
-        Server.Post("/jobs", newJob).then(_id => {
-            newJob.id = _id;
-            this.jobsMap?.insert(_id, newJob);
-        });
-    }
+    addJob = async (newJob: Job) => this.jobsMap?.insert(newJob.id = await Server.Post("/jobs", newJob), newJob);
 
     @action
     close = () => {

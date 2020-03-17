@@ -1,10 +1,14 @@
 const router = new Map();
 
 const handlers = [
-    async function logApplicationEntry({ user }, sendResponse) {
+    function logApplicationEntry({
+        user
+    }, sendResponse) {
         fetch('http://localhost:1050/jobs', {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: {
+                "Content-Type": "application/json"
+            },
             body: JSON.stringify({
                 company: window.location.host.split(".")[1],
                 jobTitle: $('h1').text(),
@@ -21,7 +25,9 @@ const handlers = [
         });
         sendResponse(true);
     },
-    function openEmbeddedBoards({ user }, sendResponse) {
+    function openEmbeddedBoards({
+        user
+    }, sendResponse) {
         if (user) {
             const board = $(`iframe[src*='boards.greenhouse.io']`);
             const found = board.length > 0;
@@ -32,7 +38,10 @@ const handlers = [
                         const a = document.createElement("a");
                         a.href = href;
                         const targetOrigin = `${a.protocol}//${a.host}`;
-                        const autofill = { action: "autofillForUser", user };
+                        const autofill = {
+                            action: "autofillForUser",
+                            user
+                        };
                         child.postMessage(autofill, targetOrigin);
                         window.removeEventListener("message", childReadyHandler);
                         sendResponse(true);
@@ -55,7 +64,9 @@ $(document).ready(() => {
         if (handler) {
             handler(request, sendResponse);
         } else {
-            sendResponse({ status: `Incorrect message action '${request.action}' provided.` });
+            sendResponse({
+                status: `Incorrect message action '${request.action}' provided.`
+            });
         }
     });
 });

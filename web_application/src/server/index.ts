@@ -44,7 +44,7 @@ server.post("/jobs", async (req, res) => {
         const jobs = await Database.getOrCreateCollection("jobs");
         const cursor = jobs.find();
         let collector: Job[] = [];
-        await cursor.forEach((job) => collector.push(job));
+        await cursor.forEach(job => collector.push(job));
         res.send(collector);
     } else {
         const result = await Database.insert("jobs", body);
@@ -75,9 +75,17 @@ server.post("/jobUpdate", async (req, res) => {
             last_name: "Wilkins",
             email: "samuel_wilkins@brown.edu",
             phone: "4158239674",
-            linked_in: "www.linkedin.com/in/sam-wilkins-173b09132",
+            linkedin_profile: "www.linkedin.com/in/sam-wilkins-173b09132",
             university: "Brown University",
-            website: "http://www.samwilkins.me"
+            website: "http://www.samwilkins.me",
+            attributes: {
+                gender: "male",
+                hispanic_latino: false,
+                race: "white",
+                veteran: false,
+                disabled: false
+            }
+            // attributes: false
         });
     }
     server.listen(port, () => console.log(`Server listening on port ${port}...`));
