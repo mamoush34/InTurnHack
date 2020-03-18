@@ -5,6 +5,11 @@
     height: 100%;
     width: 100%;
 
+    .jobs-container {
+        overflow-y: scroll;
+        padding: 25px;
+    }
+
     .logo {
         align-self: center;
         width: 300px;

@@ -60,35 +60,38 @@ export default class HomeView extends React.Component<HomeViewProps> {
 
     @computed
     private get sortingPanel() {
-        return <div
-            className={"job-rect"}
-            style={{ marginBottom: 40 }}
-            onClick={action(() => {
-                const { jobsMap } = this;
-                if (!jobsMap) {
-                    return;
-                }
-                let ordering = jobsMap.currentOrdering;
-                if (this.descending) {
-                    this.descending = false;
-                } else {
-                    this.descending = true;
-                    ordering = this.jobsMap?.currentOrdering === "status" ? "company" : "status";
-                }
-                if (ordering !== "unordered") {
-                    jobsMap.invalidateOrderingFor(ordering);
-                }
-                let comparator: Compare.Map.ByValue<Job>;
-                if (ordering === "unordered") {
-                    comparator = Comparators.unsorted;
-                } else {
-                    comparator = Comparators.sorted(ordering, this.descending);
-                }
-                jobsMap.sortBy(comparator, ordering);
-            })}
-        >
-            <div>SORTED BY {this.jobsMap?.currentOrdering} ({this.descending ? "DESCENDING" : "ASCENDING"})</div>
-        </div>
+        return <>
+            <div
+                className={"job-rect"}
+                style={{ marginBottom: 40 }}
+                onClick={action(() => {
+                    const { jobsMap } = this;
+                    if (!jobsMap) {
+                        return;
+                    }
+                    let ordering = jobsMap.currentOrdering;
+                    if (this.descending) {
+                        this.descending = false;
+                    } else {
+                        this.descending = true;
+                        ordering = this.jobsMap?.currentOrdering === "status" ? "company" : "status";
+                    }
+                    if (ordering !== "unordered") {
+                        jobsMap.invalidateOrderingFor(ordering);
+                    }
+                    let comparator: Compare.Map.ByValue<Job>;
+                    if (ordering === "unordered") {
+                        comparator = Comparators.unsorted;
+                    } else {
+                        comparator = Comparators.sorted(ordering, this.descending);
+                    }
+                    jobsMap.sortBy(comparator, ordering);
+                })}
+            >
+                <div>SORTED BY {this.jobsMap?.currentOrdering} ({this.descending ? "DESCENDING" : "ASCENDING"})</div>
+            </div>
+            <div>{this.jobsMap?.render.length} total applications</div>
+        </>
     }
 
     @computed
@@ -96,7 +99,7 @@ export default class HomeView extends React.Component<HomeViewProps> {
         const { jobsMap } = this;
         let renderedJobs = (null);
         if (jobsMap) {
-            renderedJobs = jobsMap.render.map(job => (<ApplicationRec listedJob={job} ></ApplicationRec>))
+            renderedJobs = <div className={"jobs-container"}>{jobsMap.render.map(job => (<ApplicationRec listedJob={job} ></ApplicationRec>))}</div>
         }
         if (this.openCreation) {
             return <AddJobPage close={this.close} addJob={this.addJob} />
